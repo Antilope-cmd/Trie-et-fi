@@ -14,6 +14,9 @@ root.grid_rowconfigure(0, weight=1)
 canvas = tk.Canvas(root, background="red")
 Interface = tk.Frame(root, background="blue")
 
+HEIGHT_CANVAS = canvas.winfo_height()
+WIDTH_CANVAS = canvas.winfo_width()
+
 """HERE GOES THE BUTTONS OF THE INTERFACE"""
 
 """HERE GOES THE LOGIC TO REPRESENT A LIST OF NUMBERS"""
