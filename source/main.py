@@ -1,6 +1,8 @@
 import tkinter as tk
 from classes import *
 from random import randint, shuffle
+from sorts import *
+
 
 WINDOW_COEFF = 0.5
 WINDOW_HEIGHT = 1080
@@ -21,32 +23,53 @@ interface = tk.Frame(root, background="blue")
 canvas.grid(column=0, row=0, sticky="nsew")
 interface.grid(column=1, row=0, sticky="nsew")
 
-HEIGHT_CANVAS = canvas.winfo_height()
-WIDTH_CANVAS = canvas.winfo_width()
+canvas_dimensions = get_dimensions(canvas)
 
+
+
+
+"""HERE GOES THE LOGIC TO REPRESENT A LIST OF NUMBERS"""
 main_list = [Histogram(randint(30, 500), canvas, width=20) for i in range(30)]
+#Initialising histograms
+for index, histogram in enumerate(main_list):
+    histogram.draw(position=index, spacing=5)
 
 
-"""HERE GOES THE BUTTONS OF THE INTERFACE"""
+def update_canvas_display():
+    """Refreshes the coordinates of the histogram according to the window"""
+
+    print(get_dimensions(canvas))   #TODO: DELETE THIS DEBBUGGING LINE
+    for index, histogram in enumerate(main_list):
+        histogram.update_coords(spacing=5, position=index)
+    return
+
+def resize_graph(*_event):
+    """Updates the Canvas display only when the dimentions changes"""
+    global main_list, canvas_dimensions
+    new_dimensions = get_dimensions(canvas)
+
+    if canvas_dimensions == new_dimensions:
+        return
+    
+    canvas_dimensions = new_dimensions
+    update_canvas_display()
+    
+
+"""HERE GO THE BUTTONS OF THE INTERFACE"""
 def shuffle_mainlist() -> None:
     global main_list
-    main_list = shuffle(main_list)
+    shuffle(main_list)
+    update_canvas_display()
     return
+
 randomise_button = tk.Button(interface, text="Mélanger", command=shuffle_mainlist)
 
 randomise_button.pack()
 
 
 
-"""HERE GOES THE LOGIC TO REPRESENT A LIST OF NUMBERS"""
-def canvas_mainloop():
-    canvas.delete("all")    
-    for index, histogram in enumerate(main_list):
-        histogram.draw(canvas, position=index, spacing=5)
-    root.after(10, canvas_mainloop)
-    return
+
     
 
-
-root.after(500, canvas_mainloop)
+canvas.bind("<Configure>", resize_graph)
 root.mainloop()
