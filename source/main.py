@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True  #Prevents pycache; TODO:REMOVE THIS LINE BEFORE PROD
+
 import tkinter as tk
 from classes import *
 from random import randint, shuffle
@@ -34,11 +37,18 @@ main_list = [Histogram(randint(30, 500), canvas, width=20) for i in range(30)]
 for index, histogram in enumerate(main_list):
     histogram.draw(position=index, spacing=5)
 
+def swap(index1, index2):
+    global main_list
+    main_list[index1].change_color("blue")
+    main_list[index2].change_color("blue")
+    main_list[index1], main_list[index2] = main_list[index2], main_list[index1]
+
+    return
 
 def update_canvas_display():
     """Refreshes the coordinates of the histogram according to the window"""
 
-    print(get_dimensions(canvas))   #TODO: DELETE THIS DEBBUGGING LINE
+    print("canvs dimensions: ", get_dimensions(canvas))   #TODO: DELETE THIS DEBBUGGING LINE
     for index, histogram in enumerate(main_list):
         histogram.update_coords(spacing=5, position=index)
     return
@@ -63,13 +73,8 @@ def shuffle_mainlist() -> None:
     return
 
 randomise_button = tk.Button(interface, text="Mélanger", command=shuffle_mainlist)
-
 randomise_button.pack()
-
-
-
-
-    
-
+switch_button = tk.Button(interface, text="Swap", command=lambda: swap(randint(0, 29), randint(0, 29)))
+switch_button.pack()
 canvas.bind("<Configure>", resize_graph)
 root.mainloop()
