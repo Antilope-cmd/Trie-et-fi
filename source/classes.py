@@ -16,6 +16,7 @@ class Histogram():
 
     def draw(self, position:int, spacing:int):
         """Draws the histogram on the canvas. Only to be used at initialisation."""
+        self.previous_position = position
         canvas_height, canvas_width = get_dimensions(self.canvas)
         self.x1 = position*(spacing+self.width) + 10
         self.y1 = canvas_height
@@ -25,12 +26,17 @@ class Histogram():
         return
     
     def update_coords(self, position:int, spacing):
+
+        if position == self.previous_position:
+            return  #If position in the list didn't change no need to update the coordinates
+        
         canvas_height, canvas_width = get_dimensions(self.canvas)
         self.x1 = position*(spacing+self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
         self.y2 = canvas_height - self.height
         self.canvas.coords(self.canvas_id, self.x1, self.y1, self.x2, self.y2)
+        return
 
     def change_color(self, colour:str) -> None:
         self.colour = colour
