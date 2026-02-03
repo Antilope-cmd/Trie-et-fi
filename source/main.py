@@ -46,12 +46,12 @@ def swap(index1, index2):
     return  #TODO: NOT HERE BUT MAKE A FUNTION TO TURN BACK EVERYTHING WHITE WHILE STILL KEEPING A DELAY
             #NOTE: Maybe add a list of indexes that have their color changed so that we can turn them back white with O(1) efficiency.
 
-def update_canvas_display():
+def update_canvas_display(force_update=False):
     """Refreshes the coordinates of the histogram according to the window"""
 
     print("canvs dimensions: ", get_dimensions(canvas))   #TODO: DELETE THIS DEBBUGGING LINE
     for index, histogram in enumerate(main_list):
-        histogram.update_coords(spacing=5, position=index)
+        histogram.update_coords(spacing=5, position=index, force_update=force_update)
     return
 
 def resize_graph(*_event):
@@ -63,7 +63,7 @@ def resize_graph(*_event):
         return
     
     canvas_dimensions = new_dimensions
-    update_canvas_display()
+    update_canvas_display(force_update=True)
     
 
 """HERE GO THE BUTTONS OF THE INTERFACE"""

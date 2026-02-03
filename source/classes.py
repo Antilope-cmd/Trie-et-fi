@@ -25,11 +25,12 @@ class Histogram():
         self.canvas_id = self.canvas.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill=self.colour)
         return
     
-    def update_coords(self, position:int, spacing):
+    def update_coords(self, position:int, spacing, force_update=False):
 
-        if position == self.previous_position:
+        if position == self.previous_position and not force_update:
             return  #If position in the list didn't change no need to update the coordinates
         
+        self.previous_position = position
         canvas_height, canvas_width = get_dimensions(self.canvas)
         self.x1 = position*(spacing+self.width) + 10
         self.y1 = canvas_height
