@@ -1,10 +1,8 @@
 import tkinter as tk
-from utils import *
 
 class Histogram():
     
     def __init__(self, value:float, canvas:tk.Canvas, width:int) -> None:
-        canvas_height, _ = get_dimensions(canvas)
         self.value:float = value
         self.height:float = value
         self.width:float = width
@@ -13,6 +11,9 @@ class Histogram():
 
         #Setup rectangle id to allow modifications without redrawing.
         self.canvas_id:int
+    
+    def get_dimensions(self):
+        return self.canvas.winfo_height, self.canvas.winfo_width
 
     def draw(self, position:int, spacing:int):
         """Draws the histogram on the canvas. Only to be used at initialisation."""

@@ -2,9 +2,9 @@ import sys
 sys.dont_write_bytecode = True  #Prevents pycache; TODO:REMOVE THIS LINE BEFORE PROD
 
 import tkinter as tk
-from classes import *
+from classes import Histogram
 from random import randint, shuffle
-from sorts import *
+from utils import swap_values, get_dimensions
 
 
 WINDOW_COEFF = 0.5
@@ -33,18 +33,17 @@ canvas_dimensions = get_dimensions(canvas)
 
 """HERE GOES THE LOGIC TO REPRESENT A LIST OF NUMBERS"""
 main_list = [Histogram(randint(30, 500), canvas, width=20) for i in range(30)]
+ml = main_list
+
 #Initialising histograms
 for index, histogram in enumerate(main_list):
     histogram.draw(position=index, spacing=5)
 
 def swap(index1, index2):
-    global main_list
-    main_list[index1].change_color("blue")
-    main_list[index2].change_color("blue")
-    main_list[index1], main_list[index2] = main_list[index2], main_list[index1]
+    global ml
+    swap_values(ml, index1, index2)
     update_canvas_display()
-    return  #TODO: NOT HERE BUT MAKE A FUNTION TO TURN BACK EVERYTHING WHITE WHILE STILL KEEPING A DELAY
-            #NOTE: Maybe add a list of indexes that have their color changed so that we can turn them back white with O(1) efficiency.
+    return
 
 def update_canvas_display(force_update=False):
     """Refreshes the coordinates of the histogram according to the window"""
