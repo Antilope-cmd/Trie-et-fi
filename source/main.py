@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 WINDOW_COEFF = 0.5
 WINDOW_HEIGHT = 1080
