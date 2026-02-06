@@ -13,12 +13,12 @@ class Histogram():
         self.canvas_id:int
     
     def get_dimensions(self):
-        return self.canvas.winfo_height, self.canvas.winfo_width
+        return self.canvas.winfo_height(), self.canvas.winfo_width()
 
     def draw(self, position:int, spacing:int):
         """Draws the histogram on the canvas. Only to be used at initialisation."""
         self.previous_position = position
-        canvas_height, canvas_width = get_dimensions(self.canvas)
+        canvas_height, canvas_width = self.get_dimensions()
         self.x1 = position*(spacing+self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
@@ -32,7 +32,7 @@ class Histogram():
             return  #If position in the list didn't change no need to update the coordinates
         
         self.previous_position = position
-        canvas_height, canvas_width = get_dimensions(self.canvas)
+        canvas_height, canvas_width = self.get_dimensions()
         self.x1 = position*(spacing+self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
