@@ -26,5 +26,5 @@ def update_canvas_display(main_list:list[Histogram], force_update=False):
     """Refreshes the coordinates of the histogram according to the window"""
 
     for index, histogram in enumerate(main_list):
-        histogram.update_coords(spacing=5, position=index, force_update=force_update)
+        histogram.update_coords(hist_amount=len(main_list), position=index, force_update=force_update)
     return
