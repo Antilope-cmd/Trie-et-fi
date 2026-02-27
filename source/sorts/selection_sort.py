@@ -1,7 +1,8 @@
 from classes import Histogram
+from queue import Queue
 
 
-def selectionsort(hist_list:list[Histogram], moves_queue:list):
+def selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple]):
     copy = hist_list.copy()
     n = len(copy)
 
@@ -12,7 +13,7 @@ def selectionsort(hist_list:list[Histogram], moves_queue:list):
         for j in range(i, n):
         
 
-            moves_queue.append(("compare", j, min_index))
+            moves_queue.put(("compare", j, min_index))
             
 
             if copy[j].value < min:
@@ -22,8 +23,8 @@ def selectionsort(hist_list:list[Histogram], moves_queue:list):
 
 
     
-        moves_queue.append(("swap", i, min_index))
+        moves_queue.put(("swap", i, min_index))
         copy[min_index], copy[i] = copy[i], copy[min_index]
 
-    moves_queue.append(("finished",))
+    moves_queue.put(("finished",))
     return
