@@ -6,14 +6,6 @@ def get_dimensions(canvas:tk.Canvas):
     """returns Height/width"""
     return  canvas.winfo_height(), canvas.winfo_width()
 
-def swap_values(main_list, index1, index2):
-    color = 'blue'
-    main_list[index1].change_color(color)
-    main_list[index2].change_color(color)
-    main_list[index1], main_list[index2] = main_list[index2], main_list[index1]
-    return color  #TODO: NOT HERE BUT MAKE A FUNTION TO TURN BACK EVERYTHING WHITE WHILE STILL KEEPING A DELAY
-            #NOTE: Maybe add a list of indexes that have their color changed so that we can turn them back white with O(1) efficiency.
-
 def update_canvas_display(main_list:list[Histogram], pending_updates_list:list[int]=[], force_update=False):
     """Refreshes the coordinates of the histogram according to the window"""
 
@@ -38,7 +30,7 @@ def erase_colors(colored_dict, hist_list):
         colored_dict[color].clear()
 
 def make_listbox(master, sorts:dict):
-    listbox = tk.Listbox(master)
+    listbox = tk.Listbox(master, width=50)
     for sort_name in sorts.keys():
         listbox.insert(0, sort_name)
     return listbox
