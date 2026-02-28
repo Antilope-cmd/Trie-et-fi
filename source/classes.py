@@ -1,4 +1,24 @@
 import tkinter as tk
+from time import time
+
+class Colorstamp():
+    """Class used to store the current color and validity of a color from a Histogram"""
+    def __init__(self, color:str, duration:int, canvas:tk.Canvas, canvas_id:int) -> None:
+        self.hist_id = canvas_id
+        self.color = color
+        self.timestamp = time()
+        self.validity = duration
+        self.canvas:tk.Canvas = canvas
+    
+    def is_expired(self):
+        if time() - self.timestamp >= self.validity:
+            return True
+        return False
+    
+    def reset_color(self) -> None:
+        self.canvas.itemconfig(self.hist_id, fill="white")
+        return
+
 
 class Histogram():
     
@@ -21,7 +41,7 @@ class Histogram():
         
         canvas_height, canvas_width = self.get_dimensions()
 
-        self.width = (canvas_width-10)/hist_amount
+        self.width = (canvas_width-20)/hist_amount
 
         self.x1 = position*(self.width) + 10
         self.y1 = canvas_height
@@ -34,10 +54,15 @@ class Histogram():
 
         if position == self.previous_position and not force_update:
             return  #If position in the list didn't change no need to update the coordinates
-        
-        self.previous_position = position
+
         canvas_height, canvas_width = self.get_dimensions()
-        self.width = (canvas_width-10)/hist_amount
+        self.previous_position = position
+        
+        
+        self.window_height_percentage = self.value/hist_amount
+        self.height = int(self.window_height_percentage * canvas_height)
+        self.width = (canvas_width-20)/hist_amount
+
         self.x1 = position*(self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
@@ -45,7 +70,8 @@ class Histogram():
         self.canvas.coords(self.canvas_id, self.x1, self.y1, self.x2, self.y2)
         return
 
-    def change_color(self, colour:str) -> None:
-        self.colour = colour
-        self.canvas.itemconfig(self.canvas_id, fill=colour)
-        return
+    def change_color(self, color:str, duration=1) -> Colorstamp:
+        self.colour = color
+        self.canvas.itemconfig(self.canvas_id, fill=color)
+        return Colorstamp(color=color, duration=duration, canvas=self.canvas, canvas_id=self.canvas_id)
+

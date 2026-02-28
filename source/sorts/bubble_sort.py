@@ -1,22 +1,22 @@
 from classes import Histogram
-from utils import update_canvas_display
+from queue import Queue
 
-
-def bubblesort(hist_list:list[Histogram]):
-    n = len(hist_list)
+def bubblesort(hist_list:list[Histogram], moves_queue:Queue):
+    copy = hist_list.copy()
+    n = len(copy)
     for i in range(n-1):
         for j in range(n-i-1):
-            
-            yield "compare", j, j+1
-            yield 'clearcolor', 'red'
         
+            moves_queue.put(("compare", j, j+1))
 
-            if hist_list[j].value > hist_list[j+1].value:
-                hist_list[j], hist_list[j+1] = hist_list[j+1], hist_list[j]
+            if copy[j].value > copy[j+1].value:
+                copy[j], copy[j+1] = copy[j+1], copy[j]
 
-                yield "swap", j, j+1
-                yield 'clearcolor', 'blue'
 
-        yield "delay"
+                #yield "swap", j, j+1
+                moves_queue.put(("swap", j, j+1))
 
-    yield "finished",
+
+    #yield "finished"
+    moves_queue.put(("finished",))
+    return
