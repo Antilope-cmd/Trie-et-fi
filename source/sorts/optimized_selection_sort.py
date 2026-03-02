@@ -3,14 +3,13 @@ from queue import Queue
 
 
 def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple]):
-    copy = hist_list.copy()
-    n = len(copy)
+    n = len(hist_list)
     
     for i in range(n//2):
         min_val = float("inf")
         min_index = i
 
-        max_val = float("-inf")
+        max_val = float("-inf") #Finding both min and max allows 2 times less iterations over the array
         max_index = i
 
         for j in range(i, n-i):
@@ -19,11 +18,11 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple])
             moves_queue.put(("compare", j, min_index))
             
 
-            if copy[j].value < min_val:
-                min_val = copy[j].value
+            if hist_list[j].value < min_val:
+                min_val = hist_list[j].value
                 min_index = j
-            if copy[j].value > max_val:
-                max_val = copy[j].value
+            if hist_list[j].value > max_val:
+                max_val = hist_list[j].value
                 max_index = j
 
 
@@ -31,7 +30,7 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple])
     
 
         moves_queue.put(("swap", i, min_index))
-        copy[min_index], copy[i] = copy[i], copy[min_index]
+        hist_list[min_index], hist_list[i] = hist_list[i], hist_list[min_index]
 
 
         if max_index == i:
@@ -39,7 +38,7 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple])
 
 
         moves_queue.put(("swap", n-i-1, max_index))
-        copy[max_index], copy[n-1-i] = copy[n-1-i], copy[max_index]
+        hist_list[max_index], hist_list[n-1-i] = hist_list[n-1-i], hist_list[max_index]
 
 
     moves_queue.put(("finished",))

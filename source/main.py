@@ -14,7 +14,7 @@ WINDOW_COEFF = 0.5
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-ARRAY_SIZE = 500
+ARRAY_SIZE = 1000
 Colors = True
 
 window_resize_schedule_id = ""
@@ -24,6 +24,7 @@ sorts = {
     "Tri par sélection" : selectionsort,
     "Tri par sélection optimisé" : optimized_selectionsort,
     "Tri par insertion" : insertionsort,
+    "Tri par fusion" : merge_sort
     }
 
 
@@ -60,7 +61,8 @@ mlu = main_list_updates #alias for main_list_updates
 
 colored_dict:dict[str, list[Colorstamp]] = {    #Dictionary that stores the colors used by the program.
     "red" : [],
-    "blue" : []
+    "blue" : [],
+    "green" : []
 }
 
 #Initialising histograms
@@ -96,7 +98,7 @@ def update_colors():
 
     while sorting:
 
-        for color in colored_dict.keys(): #iterating over copy of keys (more safe)
+        for color in colored_dict.keys():
 
             colorstamps = colored_dict[color]
 
@@ -128,7 +130,7 @@ def animate(moves_list:Queue):
     global scheduled_animation_id
     global sorting
     
-    if not moves_list:
+    if moves_list.empty():
         print("waiting for moves to load!")
         scheduled_animation_id = root.after(1, lambda: animate(moves_list))
         return
@@ -139,11 +141,11 @@ def animate(moves_list:Queue):
         
         case "swap":
             _, i, j = action
-            ml[i], ml[j] = ml[j], ml[i]
+            ml[i].value, ml[j].value = ml[j].value, ml[i].value
             
-            mlu.extend((i, j))
-            update_canvas_display(main_list=ml, pending_updates_list=mlu)
-            mlu.clear()
+
+            update_canvas_display(main_list=ml, pending_updates_list=[i, j])
+
 
             if Colors:
                 colorstamp1 = ml[i].change_color("blue")
@@ -157,15 +159,28 @@ def animate(moves_list:Queue):
                 colorstamp1 = ml[i].change_color("red")
                 colorstamp2 = ml[j].change_color("red")
                 colored_dict["red"].extend((colorstamp1, colorstamp2))
+        
+        case "set":
+            _, i, value = action
+            ml[i].value = value
+
+            update_canvas_display(main_list=ml, pending_updates_list=[i])
+
+            if Colors:
+                colorstamp1 = ml[i].change_color("green")
+                colored_dict["green"].append(colorstamp1)
 
         case "finished":
             print("list sorted!")
             sorting = False
+
             root.after(10, lambda: erase_colors(colored_dict=colored_dict, hist_list=main_list))
+
             listbox.config(state="normal")
             sort_button.config(state="active")
             stop_sort_button.config(state="disabled")
             randomise_button.config(state="active")
+
             return
     
     if Colors:
@@ -249,7 +264,7 @@ randomise_button = tk.Button(
 sort_button = tk.Button(
     interface,
     text="Trier",
-    command=lambda: launch_sort(ml, moves_queue),
+    command=lambda: launch_sort(ml.copy(), moves_queue),    #use a copy of the list to avoid mutations while sorting
     width=50
     )
 

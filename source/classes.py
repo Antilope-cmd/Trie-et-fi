@@ -22,12 +22,15 @@ class Colorstamp():
 
 class Histogram():
     
-    def __init__(self, value:float, canvas:tk.Canvas, width:int) -> None:
-        self.value:float = value
+    def __init__(self, value:int, canvas:tk.Canvas, width:int) -> None:
+        self.value:int = value
         self.height:float = value
         self.width:float = width
         self.colour = "white"
         self.canvas:tk.Canvas = canvas  #Stroring the canvas reference to avoid asking for it later.
+
+        self.previous_position:int
+        self.previous_value:int
 
         #Setup rectangle id to allow modifications without redrawing.
         self.canvas_id:int
@@ -37,8 +40,8 @@ class Histogram():
 
     def draw(self, position:int, hist_amount:int):
         """Draws the histogram on the canvas. Only to be used at initialisation."""
-        self.previous_position = position
-        
+        self.previous_value = self.value
+
         canvas_height, canvas_width = self.get_dimensions()
 
         self.width = (canvas_width-20)/hist_amount
@@ -52,11 +55,11 @@ class Histogram():
     
     def update_coords(self, position:int, hist_amount:int, force_update=False):
 
-        if position == self.previous_position and not force_update:
-            return  #If position in the list didn't change no need to update the coordinates
+        if (self.previous_value == self.value) and (not force_update):
+            return  #If position and value in the list didn't change no need to update the coordinates
 
         canvas_height, canvas_width = self.get_dimensions()
-        self.previous_position = position
+        self.previous_value = self.value
         
         
         self.window_height_percentage = self.value/hist_amount
