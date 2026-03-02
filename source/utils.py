@@ -22,7 +22,7 @@ def update_canvas_display(main_list:list[Histogram], pending_updates_list:list[i
     return
 
 def erase_colors(colored_dict, hist_list):
-
+    """make all histogram white"""
     for hist in hist_list:
         hist.change_color("white")
 
@@ -30,6 +30,7 @@ def erase_colors(colored_dict, hist_list):
         colored_dict[color].clear()
 
 def make_listbox(master, sorts:dict):
+    """make a listbox with sorts.keys() lines"""
     listbox = tk.Listbox(master, width=50)
     for sort_name in sorts.keys():
         listbox.insert(0, sort_name)
@@ -37,6 +38,7 @@ def make_listbox(master, sorts:dict):
 
 
 def shuffle_mainlist(mainlist, colored_dict) -> None:
+    """shuffle the main array and make every histogram white"""
     erase_colors(colored_dict=colored_dict, hist_list=mainlist)
     shuffle(mainlist)
     update_canvas_display(main_list=mainlist, force_update=True)
