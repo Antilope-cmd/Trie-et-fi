@@ -6,3 +6,4 @@ from .selection_sort import selectionsort
 from .insertion_sort import insertionsort
 from .optimized_selection_sort import optimized_selectionsort
 from .merge_sort import merge_sort
+from .quick_sort import quick_sort
