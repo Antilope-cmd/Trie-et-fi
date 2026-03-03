@@ -14,10 +14,12 @@ WINDOW_COEFF = 0.5
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-ARRAY_SIZE = 10000
+ARRAY_SIZE = 500
 Colors = True
 
 window_resize_schedule_id = ""
+
+stop_sorting_flag = threading.Event()
 
 sorts = {
     "Tri à bulles" : bubblesort,
@@ -99,7 +101,7 @@ sorting = False
 expired_stamps:Queue[Colorstamp] = Queue()
 def update_colors():
     global colored_dict, amount_stamps_deleted
-    global expired_stamps
+    global expired_stamps, stop_sorting_flag
 
     while sorting:
 
@@ -133,7 +135,7 @@ def animate(moves_list:Queue):
     """Animation function for the GUI. Given a list of moves, this funtion will replicate them on the GUI."""
     global ml, mlu, t1
     global scheduled_animation_id
-    global sorting
+    global sorting, stop_sorting_flag
     
     if moves_list.empty():
         print("waiting for moves to load!")
@@ -184,14 +186,20 @@ def animate(moves_list:Queue):
 
         case "finished":
             print("list sorted!")
+
+            #Telling the threads to stop working.
             sorting = False
+            stop_sorting_flag.clear()
 
             root.after(10, lambda: erase_colors(colored_dict=colored_dict, hist_list=main_list))
 
             listbox.config(state="normal")
             sort_button.config(state="active")
-            stop_sort_button.config(state="disabled")
             randomise_button.config(state="active")
+            pause_sort_button.config(state="disabled")
+            kill_sort_button.config(state="disabled")
+
+            moves_queue:Queue[tuple] = Queue()
 
             return
     
@@ -203,7 +211,10 @@ def animate(moves_list:Queue):
 
 def launch_sort(*args):
     global moves_queue, sorting
+    global stop_sorting_flag
+    
     sorting = True
+    stop_sorting_flag.clear()
 
     try:
         selection = listbox.curselection()
@@ -217,7 +228,7 @@ def launch_sort(*args):
 
     listbox.config(state="disabled")
     sort_button.config(state="disabled")
-    stop_sort_button.config(state="active")
+    pause_sort_button.config(state="active")
     randomise_button.config(state="disabled")
     
     t1 = threading.Thread(target=func, args=args, daemon=True)
@@ -235,11 +246,16 @@ def stop_animation():
 
     if scheduled_animation_id:
         root.after_cancel(scheduled_animation_id)
-        stop_sort_button.config(text="Reprendre")
+        
+        pause_sort_button.config(text="Reprendre")
+        kill_sort_button.config(state="active")
+        
         scheduled_animation_id = ""
     else:
         scheduled_animation_id = root.after(1, lambda: animate(moves_queue))
-        stop_sort_button.config(text="Pause")
+
+        pause_sort_button.config(text="Pause")
+        kill_sort_button.config(state="disabled")
     return
 
 
@@ -253,7 +269,13 @@ def change_color_state():
         visual_colors.config(text='Noir et Blanc')
     erase_colors(colored_dict, ml)
 
+def kill_sort():
+    global moves_queue
 
+    stop_sorting_flag.set()
+
+    moves_queue = Queue()
+    moves_queue.put(("finished",))
 
 """HERE GO THE BUTTONS OF THE INTERFACE"""
 listbox = make_listbox(master=interface, sorts=sorts)   #Listbox to choose the algorithm
@@ -276,13 +298,20 @@ randomise_button = tk.Button(
 sort_button = tk.Button(
     interface,
     text="Trier",
-    command=lambda: launch_sort(ml.copy(), moves_queue),    #use a copy of the list to avoid mutations while sorting
+    command=lambda: launch_sort(ml.copy(), moves_queue, stop_sorting_flag),    #use a copy of the list to avoid mutations while sorting
     width=50
     )
 
-stop_sort_button = tk.Button(interface,
+pause_sort_button = tk.Button(interface,
     text="Pause",
     command=stop_animation,
+    width=50,
+    state="disabled"
+    )
+
+kill_sort_button = tk.Button(interface,
+    text="Stop sorting",
+    command=kill_sort,
     width=50,
     state="disabled"
     )
@@ -299,7 +328,8 @@ visual_colors = tk.Button(
 erase_colors_button.pack(fill="both", expand=True, padx=5, pady=1)
 randomise_button.pack(fill="both", expand=True, padx=5, pady=1)
 sort_button.pack(fill="both", expand=True, padx=5, pady=1)
-stop_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
+pause_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
+kill_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 visual_colors.pack(fill="both", expand=True, padx=5, pady=1)
 
 

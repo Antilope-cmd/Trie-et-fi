@@ -5,8 +5,8 @@ from queue import Queue
 #Launch function, only used in recursive functions to signal to the GUI when to finish the sort;
 #as putting the finish inside the body of the funtion would call it everytime the function returns
 #This is the function we pass to the program
-def merge_sort(hist_list:list[Histogram], movesqueue:Queue[tuple]):
-    mergesort(hist_list, movesqueue)
+def merge_sort(hist_list:list[Histogram], movesqueue:Queue[tuple], stopflag):
+    mergesort(hist_list, movesqueue, stopflag=stopflag)
     movesqueue.put(("finished",))
     return
 
@@ -55,22 +55,25 @@ def merge(left:list[Histogram], right:list[Histogram], start_of_segment, movesqu
     return merged
 
 #Really, the algorithm is the same, only thing is we track the index of the changes while in sub arrays (to know where the changes are happening)
-def mergesort(hist_list:list[Histogram], movesqueue:Queue[tuple], start_of_segment=0):
+def mergesort(hist_list:list[Histogram], movesqueue:Queue[tuple], stopflag, start_of_segment=0):
 
     n = len(hist_list)
 
     if n <= 1:
         return hist_list
     
+    if stopflag.is_set():
+        return
+    
     middle = n//2
     left = mergesort(
-                    hist_list[:middle], movesqueue, 
+                    hist_list[:middle], movesqueue, stopflag,
 
                     #Need to keep original indexing, to tell the Gui where to change objects
                     start_of_segment=start_of_segment,
                     )
     right = mergesort(
-                    hist_list[middle:], movesqueue,
+                    hist_list[middle:], movesqueue, stopflag,
 
                     #(middle + start) gives us the starting index of the right array in the main list
                     start_of_segment= middle + start_of_segment
