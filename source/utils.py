@@ -30,7 +30,7 @@ def erase_colors(colored_dict, hist_list):
         colored_dict[color].clear()
 
 def make_listbox(master, sorts:dict):
-    listbox = tk.Listbox(master, width=50)
+    listbox = tk.Listbox(master, width=50, font=("Arial", 18))
     for sort_name in sorts.keys():
         listbox.insert(0, sort_name)
     return listbox
@@ -41,3 +41,12 @@ def shuffle_mainlist(mainlist, colored_dict) -> None:
     shuffle(mainlist)
     update_canvas_display(main_list=mainlist, force_update=True)
     return
+
+def validate_input(P):
+    try:
+        P = int(P)
+        return True
+    
+    except:
+        pass
+    return False
