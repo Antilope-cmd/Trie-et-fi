@@ -14,7 +14,7 @@ WINDOW_COEFF = 0.5
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-ARRAY_SIZE = 1000
+ARRAY_SIZE = 10000
 Colors = True
 
 window_resize_schedule_id = ""
@@ -24,7 +24,8 @@ sorts = {
     "Tri par sélection" : selectionsort,
     "Tri par sélection optimisé" : optimized_selectionsort,
     "Tri par insertion" : insertionsort,
-    "Tri par fusion" : merge_sort
+    "Tri par fusion" : merge_sort,
+    "Tri rapide" : quick_sort
     }
 
 
@@ -71,22 +72,26 @@ for index, histogram in enumerate(main_list):
 
 def on_resize(event):
     """Canvas redrawing scheduler"""
-    global window_resize_schedule_id
+    global window_resize_schedule_id, canvas
 
     if window_resize_schedule_id:   #checking if update is already scheduled
         root.after_cancel(window_resize_schedule_id)    #prevent new scheduling
-    
+
+    #Hiding items when dragging/resizing to avoid jitter.
+    canvas.itemconfig("all", state="hidden")
     window_resize_schedule_id = root.after(70, resize_graph)    #Scheduling update
 
 
 def resize_graph():
     """Updates the Graph dimensions according to the window size"""
     global window_resize_schedule_id, ml, canvas_dimensions
-
+    print("resizing")
     window_resize_schedule_id = None
     canvas_dimensions = get_dimensions(canvas)
 
-    root.after_idle(lambda: update_canvas_display(ml, force_update=True))
+    #Putting the items back.
+    canvas.itemconfig("all", state="normal")
+    root.after(1, lambda: update_canvas_display(ml, force_update=True))   #Recalculating
     
 
 
@@ -136,8 +141,22 @@ def animate(moves_list:Queue):
         return
     
     action = moves_list.get()
+    max_skips = 20
+    skips = 0
 
-    match action[0]:
+    while Colors and action[0] == "compare" and skips < max_skips:
+        _, i, j = action
+        colorstamp1 = ml[i].change_color("red")
+        colorstamp2 = ml[j].change_color("red")
+        colored_dict["red"].extend((colorstamp1, colorstamp2))
+
+        skips += 1
+
+        action = moves_list.get()
+
+
+
+    match action[0]:    #TODO: Comparisons outside the loop so we only animate the interesting things.
         
         case "swap":
             _, i, j = action
@@ -152,13 +171,6 @@ def animate(moves_list:Queue):
                 colorstamp2 = ml[j].change_color("blue")
                 colored_dict["blue"].extend((colorstamp1, colorstamp2))
 
-        
-        case "compare":
-            if Colors:
-                _, i, j = action
-                colorstamp1 = ml[i].change_color("red")
-                colorstamp2 = ml[j].change_color("red")
-                colored_dict["red"].extend((colorstamp1, colorstamp2))
         
         case "set":
             _, i, value = action
@@ -291,6 +303,6 @@ stop_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 visual_colors.pack(fill="both", expand=True, padx=5, pady=1)
 
 
-canvas.bind("<Configure>", on_resize)
+root.bind("<Configure>", on_resize)
 
 root.mainloop()
