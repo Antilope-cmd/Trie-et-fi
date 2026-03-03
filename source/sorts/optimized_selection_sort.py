@@ -2,7 +2,7 @@ from classes import Histogram
 from queue import Queue
 
 
-def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple]):
+def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple], stopflag):
     n = len(hist_list)
     
     for i in range(n//2):
@@ -14,6 +14,8 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple])
 
         for j in range(i, n-i):
         
+            if stopflag.is_set():
+                return
 
             moves_queue.put(("compare", j, min_index))
             
