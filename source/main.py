@@ -14,7 +14,7 @@ WINDOW_COEFF = 0.5
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-ARRAY_SIZE = 1000
+ARRAY_SIZE = 10000
 Colors = True
 
 window_resize_schedule_id = ""
@@ -24,7 +24,8 @@ sorts = {
     "Tri par sélection" : selectionsort,
     "Tri par sélection optimisé" : optimized_selectionsort,
     "Tri par insertion" : insertionsort,
-    "Tri par fusion" : merge_sort
+    "Tri par fusion" : merge_sort,
+    "Tri rapide" : quick_sort
     }
 
 
