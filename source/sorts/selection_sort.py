@@ -1,8 +1,7 @@
 from classes import Histogram
-from queue import Queue
+import globals
 
-
-def selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple], stop_flag):
+def selectionsort(hist_list:list[Histogram]):
     n = len(hist_list)
 
     for i in range(n):
@@ -11,10 +10,10 @@ def selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple], stop_flag
 
         for j in range(i, n):
         
-            if stop_flag.is_set():
+            if globals.stop_sorting_flag.is_set():
                 return
 
-            moves_queue.put(("compare", j, min_index))
+            globals.moves_queue.put(("compare", j, min_index))
             
 
             if hist_list[j].value < min:
@@ -24,8 +23,8 @@ def selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple], stop_flag
 
 
     
-        moves_queue.put(("swap", i, min_index))
+        globals.moves_queue.put(("swap", i, min_index))
         hist_list[min_index], hist_list[i] = hist_list[i], hist_list[min_index]
 
-    moves_queue.put(("finished",))
+    globals.moves_queue.put(("finished",))
     return
