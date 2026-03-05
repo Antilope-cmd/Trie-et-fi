@@ -1,8 +1,8 @@
 from classes import Histogram
-from queue import Queue
+import globals
 
 
-def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple], stopflag):
+def optimized_selectionsort(hist_list:list[Histogram]):
     n = len(hist_list)
     
     for i in range(n//2):
@@ -14,10 +14,10 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple],
 
         for j in range(i, n-i):
         
-            if stopflag.is_set():
+            if globals.stop_sorting_flag.is_set():
                 return
 
-            moves_queue.put(("compare", j, min_index))
+            globals.moves_queue.put(("compare", j, min_index))
             
 
             if hist_list[j].value < min_val:
@@ -31,7 +31,7 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple],
 
     
 
-        moves_queue.put(("swap", i, min_index))
+        globals.moves_queue.put(("swap", i, min_index))
         hist_list[min_index], hist_list[i] = hist_list[i], hist_list[min_index]
 
 
@@ -39,9 +39,9 @@ def optimized_selectionsort(hist_list:list[Histogram], moves_queue:Queue[tuple],
             max_index = min_index
 
 
-        moves_queue.put(("swap", n-i-1, max_index))
+        globals.moves_queue.put(("swap", n-i-1, max_index))
         hist_list[max_index], hist_list[n-1-i] = hist_list[n-1-i], hist_list[max_index]
 
 
-    moves_queue.put(("finished",))
+    globals.moves_queue.put(("finished",))
     return
