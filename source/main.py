@@ -11,12 +11,13 @@ from queue import Queue
 import threading
 import globals
 
-WINDOW_COEFF = 0.5
+WINDOW_COEFF = 0.7
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
 array_size:int = 350
 Colors = True
+delay:int = 0
 
 window_resize_schedule_id = ""
 
@@ -40,7 +41,10 @@ root.grid_rowconfigure(0, weight=1)
 
 
 canvas = tk.Canvas(root, background="black")
+
 interface = tk.Frame(root, background="white", border=5)
+array_size_menu = tk.Frame(interface, background="white", width=25)
+delay_menu = tk.Frame(interface, background="white", width=25)
 
 canvas.grid(column=0, row=0, sticky="nsew")
 interface.grid(column=1, row=0, sticky="nsew")
@@ -94,7 +98,10 @@ def resize_graph():
 def change_len_mainlist(new_len):
     global main_list, array_size
 
-    histogram_count_update.config(state="disabled")
+    if new_len == "":
+        return
+
+    histogram_count_submit.config(state="disabled")
 
     new_len = int(new_len)
     array_size = new_len
@@ -112,7 +119,18 @@ def change_len_mainlist(new_len):
 
     update_canvas_display(main_list, force_update=True)
 
-    histogram_count_update.config(state="active")
+    histogram_count_submit.config(state="active")
+    return
+
+def change_delay(new_delay):
+    global delay
+
+    if new_delay == "":
+        return
+
+    delay = int(new_delay)
+
+    delay_label.config(text=f"Choose the delay between each move (current: {delay}ms)")
     return
 
 sorting = False
@@ -160,7 +178,14 @@ def animate(moves_list:Queue):
         return
     
     action = moves_list.get()
-    max_skips = 20
+    #The greater the delay, the less skips happen to keep everything smooth
+    #Max/min skips possible: 20/1
+    max_skips = max( 1,
+                min(
+        20,
+        int( 20 * (40/(delay+1) ) )
+        
+        ))
     skips = 0
 
     while Colors and action[0] == "compare" and skips < max_skips:
@@ -172,6 +197,12 @@ def animate(moves_list:Queue):
         skips += 1
 
         action = moves_list.get()
+        
+    if action[0] == "compare":
+        _, i, j = action
+        colorstamp1 = ml[i].change_color("red")
+        colorstamp2 = ml[j].change_color("red")
+        colored_dict["red"].extend((colorstamp1, colorstamp2))
 
 
 
@@ -214,7 +245,7 @@ def animate(moves_list:Queue):
             randomise_button.config(state="active")
             pause_sort_button.config(state="disabled")
             kill_sort_button.config(state="disabled")
-            histogram_count_update.config(state="active")
+            histogram_count_submit.config(state="active")
 
             globals.moves_queue = Queue()
 
@@ -223,7 +254,13 @@ def animate(moves_list:Queue):
     if Colors:
         delete_old_colors()
     
-    scheduled_animation_id = root.after_idle(lambda: animate(moves_list))
+    if not delay:
+        scheduled_animation_id = root.after_idle(lambda: animate(moves_list))
+    
+    else:
+        scheduled_animation_id = root.after(delay, lambda: animate(moves_list))
+    
+    return
 
 
 def launch_sort(*args):
@@ -245,7 +282,7 @@ def launch_sort(*args):
     sort_button.config(state="disabled")
     pause_sort_button.config(state="active")
     randomise_button.config(state="disabled")
-    histogram_count_update.config(state="disabled")
+    histogram_count_submit.config(state="disabled")
     
     t1 = threading.Thread(target=func, args=args, daemon=True)
     t1.start()
@@ -349,27 +386,56 @@ visual_colors = tk.Button(
     font=("Arial", secondary_font_size)
     )
 
+menu_separator = tk.Label(interface, text="_________________________________", font=("Arial", important_font_size))
+
 histogram_count_label = tk.Label(
     interface,
-    text=f"Choose the size of the array to sort (current: {array_size}):",
+    text=f"Choose the size of the array to sort (current: {array_size})",
     font=("Arial", secondary_font_size)
 )
 
 vcmd = root.register(validate_input)
 histogram_amount_entry = tk.Entry(
-    interface,
+    array_size_menu,
     width=15,
+    highlightbackground="red",
     validate="key",
     validatecommand= (vcmd, "%P"),
+    font=("Arial", secondary_font_size),
+    relief="solid",
+    borderwidth=1,
+)
+
+histogram_count_submit = tk.Button(
+    array_size_menu,
+    text="Submit",
+    command=lambda: change_len_mainlist(histogram_amount_entry.get()),
+    width=10,
+    font=("Arial", important_font_size),
+)
+
+delay_label = tk.Label(
+    interface,
+    text=f"Choose the delay between each move (current: {delay}ms)",
     font=("Arial", secondary_font_size)
 )
 
-histogram_count_update = tk.Button(
-    interface,
-    text="Submit",
-    command=lambda: change_len_mainlist(histogram_amount_entry.get()),
+delay_entry = tk.Entry(
+    delay_menu,
     width=15,
-    font=("Arial", important_font_size)
+    validate="key",
+    validatecommand= (vcmd, "%P"),
+    font=("Arial", secondary_font_size),
+    relief="solid",
+    borderwidth=1,
+)
+
+delay_submit_button = tk.Button(
+    delay_menu,
+    text="Submit",
+    command=lambda: change_delay(delay_entry.get()),
+    width=10,
+    font=("Arial", important_font_size),
 )
 
 erase_colors_button.pack(fill="both", expand=True, padx=5, pady=1)
@@ -378,10 +444,27 @@ sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 pause_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 kill_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 visual_colors.pack(fill="both", expand=True, padx=5, pady=1)
-histogram_count_label.pack(fill="both", expand=True, padx=5, pady=1)
-histogram_amount_entry.pack(fill="both", expand=True, padx=5, pady=1)
-histogram_count_update.pack(fill="both", expand=True, padx=5, pady=1)
 
+menu_separator.pack(fill="both", expand=False, padx=5)
+
+
+array_size_menu.columnconfigure(0, weight=1)
+array_size_menu.columnconfigure(1, weight=1)
+
+delay_menu.columnconfigure(0, weight=1)
+delay_menu.columnconfigure(1, weight=1)
+
+histogram_count_label.pack(fill="both", expand=True, padx=5, pady=0)
+
+histogram_amount_entry.grid(column=0, row=0, sticky="nwse")
+histogram_count_submit.grid(column=1, row=0, sticky="nwse")
+array_size_menu.pack(fill="both", expand=True, padx=5, pady=0)
+
+delay_label.pack(fill="both", expand=True, padx=5, pady=0)
+
+delay_entry.grid(column=0, row=0, sticky="nwse")
+delay_submit_button.grid(column=1, row=0, sticky="nwse")
+delay_menu.pack(fill="both", expand=True, padx=5, pady=0)
 
 root.bind("<Configure>", on_resize)
 

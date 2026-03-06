@@ -73,7 +73,7 @@ class Histogram():
         self.canvas.coords(self.canvas_id, self.x1, self.y1, self.x2, self.y2)
         return
 
-    def change_color(self, color:str, duration=1) -> Colorstamp:
+    def change_color(self, color:str, duration=0) -> Colorstamp:
         self.colour = color
         self.canvas.itemconfig(self.canvas_id, fill=color)
         return Colorstamp(color=color, duration=duration, canvas=self.canvas, canvas_id=self.canvas_id)
