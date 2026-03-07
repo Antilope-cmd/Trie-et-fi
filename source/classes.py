@@ -3,7 +3,7 @@ from time import time
 
 class Colorstamp():
     """Class used to store the current color and validity of a color from a Histogram"""
-    def __init__(self, color:str, duration:int, canvas:tk.Canvas, canvas_id:int) -> None:
+    def __init__(self, color:str, duration:float, canvas:tk.Canvas, canvas_id:int) -> None:
         self.hist_id = canvas_id
         self.color = color
         self.timestamp = time()
@@ -11,7 +11,7 @@ class Colorstamp():
         self.canvas:tk.Canvas = canvas
     
     def is_expired(self):
-        if time() - self.timestamp >= self.validity:
+        if time() - self.timestamp > self.validity:
             return True
         return False
     

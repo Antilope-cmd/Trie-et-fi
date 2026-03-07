@@ -1,7 +1,5 @@
-import sys
-sys.dont_write_bytecode = True  #Prevents pycache; TODO:REMOVE THIS LINE BEFORE PROD
-
 import tkinter as tk
+import os
 from typing import Callable
 from classes import Histogram, Colorstamp
 from utils import *
@@ -21,19 +19,12 @@ delay:int = 0
 
 window_resize_schedule_id = ""
 
-sorts = {
-    "Tri à bulles" : bubblesort,
-    "Tri par sélection" : selectionsort,
-    "Tri par sélection optimisé" : optimized_selectionsort,
-    "Tri par insertion" : insertionsort,
-    "Tri par fusion" : merge_sort,
-    "Tri rapide" : quick_sort
-    }
 
 """Configuring window"""
 root = tk.Tk()
 root.geometry(f"{int(WINDOW_COEFF*WINDOW_WIDTH)}x{int(WINDOW_COEFF*WINDOW_HEIGHT)}")
 root.title("Trie et fi")
+root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
 
 root.grid_columnconfigure(0, weight=5)
 root.grid_columnconfigure(1, weight=1)
@@ -63,7 +54,7 @@ ml = main_list  #alias for main_list
 main_list_updates:list[int] = []    #List that stores pending GUI updates
 mlu = main_list_updates #alias for main_list_updates
 
-colored_dict:dict[str, list[Colorstamp]] = {    #Dictionary that stores the colors used by the program.
+colored_dict:dict[str, list[Colorstamp]] = {    #Dictionary that stores the active colors on the GUI.
     "red" : [],
     "blue" : [],
     "green" : []
@@ -78,7 +69,7 @@ def on_resize(event):
     global window_resize_schedule_id, canvas
 
     if window_resize_schedule_id:   #checking if update is already scheduled
-        root.after_cancel(window_resize_schedule_id)    #prevent new scheduling
+        root.after_cancel(window_resize_schedule_id)    #prevent mass scheduling
 
     #Hiding items when dragging/resizing to avoid jitter.
     canvas.itemconfig("all", state="hidden")
@@ -196,9 +187,12 @@ def animate(moves_list:Queue):
 
         skips += 1
 
+        if moves_list.empty():
+            break
+
         action = moves_list.get()
         
-    if action[0] == "compare":
+    if action[0] == "compare" and Colors:
         _, i, j = action
         colorstamp1 = ml[i].change_color("red")
         colorstamp2 = ml[j].change_color("red")
@@ -276,7 +270,7 @@ def launch_sort(*args):
     except IndexError:
         return
 
-    func: Callable = sorts[selected_name]
+    func: Callable = sorts_dict[selected_name]
 
     listbox.config(state="disabled")
     sort_button.config(state="disabled")
@@ -300,7 +294,7 @@ def stop_animation():
     if scheduled_animation_id:
         root.after_cancel(scheduled_animation_id)
         
-        pause_sort_button.config(text="Reprendre")
+        pause_sort_button.config(text="Resume")
         kill_sort_button.config(state="active")
         
         scheduled_animation_id = ""
@@ -317,9 +311,9 @@ def change_color_state():
     global Colors, visual_colors
     Colors = not Colors
     if Colors:
-        visual_colors.config(text='Couleurs')
+        visual_colors.config(text='Colors: enabled')
     else:
-        visual_colors.config(text='Noir et Blanc')
+        visual_colors.config(text='Colors: disabled')
     erase_colors(colored_dict, ml)
 
 def kill_sort():
@@ -335,20 +329,12 @@ def kill_sort():
 important_font_size = 18
 secondary_font_size = 14
 
-listbox = make_listbox(master=interface, sorts=sorts)   #Listbox to choose the algorithm
+listbox = make_listbox(master=interface, sorts=sorts_dict)   #Listbox to choose the algorithm
 listbox.pack(fill="both", expand=True, padx=5, pady=1)
-
-erase_colors_button = tk.Button(
-    interface,
-    text="Effacer couleurs",
-    command=lambda: erase_colors(colored_dict=colored_dict, hist_list=main_list),
-    width=15,
-    font=("Arial", secondary_font_size)
-    )
 
 randomise_button = tk.Button(
     interface,
-    text="Mélanger",
+    text="Randomise",
     command=lambda: shuffle_mainlist(main_list, colored_dict),
     width=15,
     font=("Arial", secondary_font_size)
@@ -356,7 +342,7 @@ randomise_button = tk.Button(
 
 sort_button = tk.Button(
     interface,
-    text="Trier",
+    text="Launch sort",
     command=lambda: launch_sort(ml.copy()),    #use a copy of the list to avoid mutations while sorting
     width=15,
     font=("Arial", secondary_font_size)
@@ -380,7 +366,7 @@ kill_sort_button = tk.Button(interface,
 
 visual_colors = tk.Button(
     interface,
-    text="Couleurs",
+    text="Colors: enabled",
     command=change_color_state,
     width=15,
     font=("Arial", secondary_font_size)
@@ -438,7 +424,6 @@ delay_submit_button = tk.Button(
     font=("Arial", important_font_size),
 )
 
-erase_colors_button.pack(fill="both", expand=True, padx=5, pady=1)
 randomise_button.pack(fill="both", expand=True, padx=5, pady=1)
 sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 pause_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
