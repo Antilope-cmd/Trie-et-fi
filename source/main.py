@@ -23,6 +23,7 @@ window_resize_schedule_id = ""
 
 sorts = {
     "Tri à bulles" : bubblesort,
+    "Tri cocktail" : cocktailshaker_sort,
     "Tri par sélection" : selectionsort,
     "Tri par sélection optimisé" : optimized_selectionsort,
     "Tri par insertion" : insertionsort,
@@ -196,9 +197,12 @@ def animate(moves_list:Queue):
 
         skips += 1
 
+        if moves_list.empty():
+            break
+
         action = moves_list.get()
         
-    if action[0] == "compare":
+    if action[0] == "compare" and Colors:
         _, i, j = action
         colorstamp1 = ml[i].change_color("red")
         colorstamp2 = ml[j].change_color("red")
