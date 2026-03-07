@@ -11,7 +11,7 @@ class Colorstamp():
         self.canvas:tk.Canvas = canvas
     
     def is_expired(self):
-        if time() - self.timestamp >= self.validity:
+        if time() - self.timestamp > self.validity:
             return True
         return False
     

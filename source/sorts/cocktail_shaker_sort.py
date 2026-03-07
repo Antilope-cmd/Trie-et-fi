@@ -5,7 +5,8 @@ def cocktailshaker_sort(hist_list:list[Histogram]):
     n = len(hist_list)
 
     for i in range(n//2):
-        
+        swapped = False
+
         #First pass
         for j in range(i, n-i-1):
             
@@ -14,7 +15,10 @@ def cocktailshaker_sort(hist_list:list[Histogram]):
 
                 globals.moves_queue.put(("swap", j, j+1))
                 hist_list[j+1], hist_list[j] = hist_list[j], hist_list[j+1]
+                swapped = True
         
+        if not swapped:
+            break
         #Reverse pass
         for j in range(n-i-2, i, -1):
 
