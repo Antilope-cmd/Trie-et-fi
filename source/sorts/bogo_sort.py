@@ -1,12 +1,13 @@
 from classes import Histogram
-from utils import shuffle_mainlist
+from utils import shuffle_mainlist, update_canvas_display
 from main import colored_dict
+import globals
 
 """ boggo sort is a sorting algorithm who shuffle the array util it's sorted.
         average complexity O(n*n!) | best case  O(n) | worst case O(∞)"""
 
 
-def bogosort(hist_list:list[Histogram], moves_queue:Queue):
+def bogosort(hist_list:list[Histogram]):
     is_sorted = False
     while is_sorted == False:
         for i in range(len(hist_list)):                         # look inside of hist_list to see if it is sorted
@@ -23,5 +24,5 @@ def bogosort(hist_list:list[Histogram], moves_queue:Queue):
             update_canvas_display(hist_list,force_update=True)      # update the canvas
 
 
-    moves_queue.append(("finished",))       # hist_list is sorted, so we exit the function
+    globals.moves_queue.put(("finished",))       # hist_list is sorted, so we exit the function
     return
