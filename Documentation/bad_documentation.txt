@@ -1,0 +1,120 @@
+code_wise_history
+
+# Date: [who push]
+#    Creation of name
+#	    {IMPORT of "our_stuff", 'not_our_stuff' || main_variable ADDED || function_name() ADDED || function() MOVED to new_file || name REMOVED} "main.py"
+#	    {} "classes.py"
+#	    {} "utils.py"
+#	    {} "globals.py"
+#	    {} "__init__.py"
+#	    {} "bubble_sort.py"
+#	    {} "selection_sort.py"
+#	    {} "optimized_selection_sort.py"
+#	    {} "insertion_sort.py"
+#	    {} "merge_sort.py"
+#	    {} "quick_sort.py"
+#	    {} "cocktail_shaker_sort.py"
+#	    {} "stalin_sort.py"
+#	    {} "bogo_sort.py"
+
+January 5: [Assad]
+    Creation repo GitHub, "main.py", "classes.py", "README.md", "requirement.txt", "licence.txt", "docs folder", "data folder", "exemple folder", "source folder"
+ 	    {IMPORT of 'tkinter'} "main.py"
+
+January 22: [Assad]
+    rule file added
+ 	    {tkinter skeleton ADDED} "main.py"
+
+January 24: [Assad]
+    Creation "utils.py"
+ 	    {IMPORT of "classes.py", 'random' || canvas_mainloop() ADDED} "main.py"
+ 	    {IMPORT of "utils.py", 'tkinter' || Histogram() class with draw() method ADDED} "classes.py"
+ 	    {IMPORT of 'tkinter' || get_dimentions(), fill_percentage() ADDED} "utils.py"
+
+January 28: [Assad]
+ 	    {shuffle_mainlist() ADDED} "main.py"
+
+January 29: [Assad]
+    Creation "sorts folder", "__init__.py", "bubble_sort.py", "selection_sort.py"
+ 	    {IMPORT of "sorts" || update_canvas_display(), resize_graph() ADDED || canvas_mainloop() REMOVED} "main.py"
+ 	    {update_coords(), change_color(), get_value() method ADDED to Histogram class} "classes.py"
+
+January 30: [Assad] (readme say something)
+
+February 1: [Assad]
+ 	    {swap() ADDED} "main.py"
+
+February 5: [Assad]
+ 	    {IMPORT "utils.py", 'random'} "main.py"
+ 	    {get_dimention() method ADDED to Histogram class} "classes.py"
+ 	    {IMPORT "classes.py" || swap_values() ADDED} "utils.py"
+
+February 6: [Assad]
+ 	    {IMPORT of "classes.py", "util.py", 'sys'
+ 	    main_list, colored_dict ADDED
+ 	    erase_color_button, randomise_button, switch_button to interface ADDED
+ 	    swap(), erase_color() ADDED} "main.py"
+
+February 19: [Assad]
+ 	    {update_canvas_display() MOVED to "utils.py"} "main.py"
+ 	    {update_canvas_display() ADDED} "utils.py"
+
+February 22: [Assad]
+ 	    {IMPORT of 'typing' || animate(), lanch_sort() ADDED || swap() REMOVED} "main.py"
+ 	    {ADDED $proportional scaling$} "classes.py"
+ 	    {IMPORT of "bubble_sort.py"} "__init__.py"
+ 	    {IMPORT of "classes.py", "utils.py" || bubblesort() ADDED} "bubble_sort.py"
+
+February 25: [Assad]
+    Creation "insertion_sort.py", "optimized_selection_sort.py"
+ 	    {IMPORT of 'threading' || Colors, moves_queue, main_list_updates ADDED || on_resize(), stop_animation(), change_color_state(), update_colors() ADDED
+ 	    shuffle_mainlist(), erase_colors() MOVED to "utils.py"} "main.py"
+ 	    {Colorstamp() class with is_expired(), reset_color() method ADDED || $proportional size$ ADDED to Histogram() class} "classes.py"
+ 	    {IMPORT 'random' || erase_colors(), make_listbox(), shuffle_mainlist() ADDED || fill_percentage() REMOVED} "utils.py"
+ 	    {IMPORT of "selection_sort.py", "optimized_selection_sort.py", "insertion_sort.py"} "__init__.py"
+ 	    {"utils.py" REMOVED} "bubble_sort.py"
+ 	    {IMPORT of "classes.py" || selectionsort() function ADDED} "selection_sort.py"
+ 	    {IMPORT of "classes.py" || optimized_selectionsort() function ADDED} "optimized_selection_sort.py"
+ 	    {IMPORT of "classes.py" || insertion_sort() function ADDED} "insertion_sort.py"
+
+February 28: [Assasd]
+    Creation "licence.txt"
+ 	    {IMPORT 'queue' and 'time' || sorts ADDED || delete_old_colors() ADDED || 'random' REMOVED} "main.py"
+ 	    {swap_values() REMOVED} "utils.py"
+ 	    {IMPORT 'queue'} "bubble_sort.py"
+ 	    {IMPORT 'queue'} "selection_sort.py"
+ 	    {IMPORT 'queue'} "optimized_selection_sort.py"
+ 	    {IMPORT 'queue'} "insertion_sort.py"
+
+March 2: [Assad]
+    Creation "merge_sort.py"
+ 	    {IMPORT "merge_sort.py"} "__init__.py"
+ 	    {IMPORT "classes.py", 'queue' || merge_sort(), merge(), mergesort() ADDED} "merge_sort.py"
+
+March 3: [Assad]
+    Creation "quick_sort.py"
+ 	    {stop_sorting_flag ADDED} "main.py"
+ 	    {IMPORT "quick_sort.py"} "__init__.py"
+ 	    {IMPORT "classes.py" and 'queue' || quick_sort(), partition(), quicksort() function ADDED} "quick_sort.py"
+
+March 4: [Assad]
+ 	    {change_len_mainlist() ADDED} "main.py"
+ 	    {validate_input() ADDED} "utils.py"
+
+March 5: [Assad]
+    Creation globals.py
+ 	    {stop_sorting_flag and moves_queue MOVED to "globals.py"} "main.py"
+ 	    {IMPORT queue and threading || stop_sorting_flag, moves_queue ADDED} "globals.py"
+ 	    {IMPORT "globals.py" || 'queue' REMOVED} "bubble_sort.py"
+ 	    {IMPORT "globals.py" || 'queue' REMOVED} "selection_sort.py"
+ 	    {IMPORT "globals.py" || 'queue' REMOVED} "optimized_selection_sort.py"
+ 	    {IMPORT "globals.py" || 'queue' REMOVED} "insertion_sort.py"
+ 	    {IMPORT "globals.py" || 'queue' REMOVED} "merge_sort.py"
+ 	    {IMPORT "globals.py" || 'queue' REMOVED} "quick_sort.py"
+
+March 7: [Assad]
+    Creation "cocktail_shaker_sort.py"
+ 	    {IMPORT "cocktail_shaker_sort.py"} "__init__.py"
+ 	    {IMPORT "globals.py", "classe.py" || cocktailshaker_sort() ADDED} "cocktail_shaker_sort.py"
+        {IMPORT "globals.py", "classe.py" || stalinsort() ADDED} "stalin_sort.py"
+        {IMPORT "globals.py", "classe.py" || bogosort() ADDED} "bogo_sort.py"

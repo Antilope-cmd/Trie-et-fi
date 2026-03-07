@@ -1,0 +1,54 @@
+5 Janvier:
+Création du repo GitHub, des fichiers "main.py", "classes.py" et "README.md".
+
+22 Janvier:
+Ajout du fichier contenant les régle du coucour trophet des nsi.
+Création du skelette tkinter
+
+24 Janvier:
+Création de la classe Histogram et la methode draw().
+On peut maintenant obtenir les dimentions de la fenetre.
+
+28 Janvier:
+La liste principale peut etre melanger
+
+29 Janvier:
+Création du dossier sorts.
+Le canvas peut étre mit a jour et la taille du graphique peut étre ajuster.
+Les cohordoners des Histogram peuvent étre mise a jour et on peut changer leur couleur.
+
+30 Janvier:
+Le fichier "README.md" a était remplit.
+
+1 Fevrier:
+Les Histogram peuvent étre échanger.
+
+6 Fevrier:
+Des bouttons pour melanger les histogram, effacer les couleurs et echanger les histogram on était ajouter a l'interface.
+
+22 Fevrier:
+Ajout d'animation et du lancement des tris.
+Ajout de bubble sort
+
+25 Fevrier:
+L'animation peut etre arreter.
+Modification dans le fonctionement du programme.
+Ajout de la classe Colorstamp, de selection sort(optimizer et non) et de insertion sort
+
+28 Fevrier:
+Modification dans le fonctionement du programme.
+
+2 Mars:
+Ajout de merge sort.
+
+3 Mars:
+Ajout de quick sort.
+
+4 Mars:
+La taille de la liste principale peut etre changer.
+
+5 Mars:
+Modification dans le fonctionement du programme.
+
+7 Mars:
+Ajout de cocktail shaker sort, stalin sort, bogo sort.
