@@ -21,13 +21,13 @@ class Colorstamp():
 
 
 class Histogram():
-    
+    '''Class used to representthe value of the main array'''
     def __init__(self, value:int, canvas:tk.Canvas, width:int) -> None:
         self.value:int = value
         self.height:float = value
         self.width:float = width
         self.colour = "white"
-        self.canvas:tk.Canvas = canvas  #Stroring the canvas reference to avoid asking for it later.
+        self.canvas:tk.Canvas = canvas  #Storing the canvas reference to avoid asking for it later.
 
         self.previous_position:int
         self.previous_value:int
@@ -54,6 +54,9 @@ class Histogram():
         return
     
     def update_coords(self, position:int, hist_amount:int, force_update=False):
+        ''' position        is the position of the histogram in the array
+            hist_amound     is the maximum size posible for an istogram in this array
+            force_update    allow to force the update event if the position in the array didn't change'''
 
         if (self.previous_value == self.value) and (not force_update):
             return  #If position and value in the list didn't change no need to update the coordinates
