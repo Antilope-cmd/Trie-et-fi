@@ -1,6 +1,8 @@
+import sys
+sys.dont_write_bytecode = True
+
 import tkinter as tk
 import os
-from typing import Callable
 from classes import Histogram, Colorstamp
 from utils import *
 from sorts import *
@@ -270,7 +272,7 @@ def launch_sort(*args):
     except IndexError:
         return
 
-    func: Callable = sorts_dict[selected_name]
+    func = sorts_dict[selected_name]
 
     listbox.config(state="disabled")
     sort_button.config(state="disabled")
