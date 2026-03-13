@@ -168,6 +168,7 @@ def animate(moves_list:Queue):
     
     if moves_list.empty():
         scheduled_animation_id = root.after(1, lambda: animate(moves_list))
+        print("waiting for moves to load")
         return
     
     action = moves_list.get()
