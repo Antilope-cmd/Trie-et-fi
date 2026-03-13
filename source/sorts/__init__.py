@@ -8,6 +8,7 @@ from .insertion_sort import insertionsort
 from .optimized_selection_sort import optimized_selectionsort
 from .merge_sort import merge_sort
 from .quick_sort import quick_sort
+from .reverse_list import reverselist
 
 
 sorts_dict = {
@@ -17,5 +18,6 @@ sorts_dict = {
     "Optimized selection sort" : optimized_selectionsort,
     "Insertion sort" : insertionsort,
     "Merge sort" : merge_sort,
-    "Quick sort" : quick_sort
+    "Quick sort" : quick_sort,
+    "Reverse list" : reverselist
     }
