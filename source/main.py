@@ -26,7 +26,7 @@ window_resize_schedule_id = ""
 root = tk.Tk()
 root.geometry(f"{int(WINDOW_COEFF*WINDOW_WIDTH)}x{int(WINDOW_COEFF*WINDOW_HEIGHT)}")
 root.title("Trie et fi")
-root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
+"""root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))"""
 
 root.grid_columnconfigure(0, weight=5)
 root.grid_columnconfigure(1, weight=1)
