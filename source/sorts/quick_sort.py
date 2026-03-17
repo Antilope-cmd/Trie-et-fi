@@ -1,5 +1,6 @@
 from classes import Histogram
 import globals
+from random import randint
 
 """Quicksort stays nice and simple because it already works on the main array"""
 
@@ -10,6 +11,13 @@ def quick_sort(array):
 
 
 def partition(hist_list:list[Histogram], start:int, end:int):
+    
+    #Choosing random pivot to avoid worse-case scenarios
+    random_pivot_index = randint(start, end)
+    
+    hist_list[random_pivot_index], hist_list[end] = hist_list[end], hist_list[random_pivot_index]
+    globals.moves_queue.put(("swap", random_pivot_index, end))
+
     pivot = hist_list[end]
     i = start
     
