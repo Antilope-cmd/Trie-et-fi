@@ -345,7 +345,7 @@ randomise_button = tk.Button(
 
 sort_button = tk.Button(
     interface,
-    text="Launch sort",
+    text="► Launch sort",
     command=lambda: launch_sort(ml.copy()),    #use a copy of the list to avoid mutations while sorting
     width=15,
     font=("Arial", secondary_font_size)
@@ -360,7 +360,7 @@ pause_sort_button = tk.Button(interface,
     )
 
 kill_sort_button = tk.Button(interface,
-    text="Stop sorting",
+    text="■ Stop sorting",
     command=kill_sort,
     width=15,
     state="disabled",
