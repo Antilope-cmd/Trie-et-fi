@@ -1,11 +1,13 @@
 from classes import Histogram
 from utils import update_canvas_display
+from main import return_max_size
+import globals
 
 """ staline sort is sorting an array by onli keeping what is already sorted in the list
         best, average and worst case O(n)"""
 
 
-def stalinsort(hist_list:list[Histogram], moves_queue:Queue):
+def stalinsort(hist_list:list[Histogram]):
     i = 1
     while i < len(hist_list):                           # as long as we don't have reach the last histogram of the array
         

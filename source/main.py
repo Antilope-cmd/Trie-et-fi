@@ -1,3 +1,5 @@
+array_size:int = 350
+
 import tkinter as tk
 import os
 from typing import Callable
@@ -13,7 +15,7 @@ WINDOW_COEFF = 0.7
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-array_size:int = 350
+
 Colors = True
 delay:int = 0
 

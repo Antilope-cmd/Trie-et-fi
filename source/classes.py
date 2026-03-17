@@ -1,5 +1,7 @@
 import tkinter as tk
 from time import time
+from main import array_size
+
 
 class Colorstamp():
     """Class used to store the current color and validity of a color from a Histogram"""
@@ -49,7 +51,7 @@ class Histogram():
         self.x1 = position*(self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
-        self.y2 = canvas_height - self.height
+        self.y2 = canvas_height // array_size * self.height
         self.canvas_id = self.canvas.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill=self.colour, outline='')
         return
     
@@ -72,7 +74,7 @@ class Histogram():
         self.x1 = position*(self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
-        self.y2 = canvas_height - self.height
+        self.y2 = canvas_height // array_size * self.height
         self.canvas.coords(self.canvas_id, self.x1, self.y1, self.x2, self.y2)
         return
 
@@ -80,4 +82,6 @@ class Histogram():
         self.colour = color
         self.canvas.itemconfig(self.canvas_id, fill=color)
         return Colorstamp(color=color, duration=duration, canvas=self.canvas, canvas_id=self.canvas_id)
-
+    
+    def destroy(self):
+        self.canvas.delete(self.canvas_id)
