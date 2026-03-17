@@ -1,9 +1,12 @@
-Application de visualisation d'algorithmes de tri.
-Fait par Assad Norat, Jean Brochard, Corentin Vidal et Bachir Diallo.
+Sorting algorithm vizualizer app.
+Made by Assad Norat, Jean Brochard, Corentin Vidal and Bachir Diallo.
 
-Comment lancer ce projet?
-    Télécharger -> Naviguer dans source/ -> éxécuter main.py
+How to launch this project?
+    Go in the "releases" tab and download the .zip folder.
+    Unzip the folder.
+    Naviguate into the source directory and lauch main.py.
 
-Compatibilité:
-    Python 3.0.0 ou plus (Normalement)
-    Python 3.11.10 (version recommendée)
+
+Compatibility:
+    minimum: Python 3.10 or more
+    recommended: 3.10.11 or more
