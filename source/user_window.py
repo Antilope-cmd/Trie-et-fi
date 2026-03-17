@@ -16,14 +16,14 @@
 
 
 import tkinter as tk
-from main import array_size, mainlist
+from main import array_size, mainlist, canvas
 
 def Mousecoords(event):
     if array_size < canvas.winfo_width():
         index = event.x % array_size
     elif array_size > canvas.winfo_width():
         ind_approx = array_size / canvas.winfo_width()
-        ind_star = event.x * ind_approx
+        ind_start = event.x * ind_approx
         index = [ind_start + i for i in range(ind_approx)]
     
     pointxy = (event.x, event.y) # get the mouse position from event
