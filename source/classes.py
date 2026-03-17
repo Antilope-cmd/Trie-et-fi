@@ -1,6 +1,6 @@
 import tkinter as tk
 from time import time
-from main import array_size
+# from main import array_size
 
 
 class Colorstamp():
