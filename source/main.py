@@ -1,8 +1,8 @@
 import sys
-sys.dont_write_bytecode = True
+sys.dont_write_bytecode = True  #TODO: Remove this line before production
 
 import tkinter as tk
-import os
+import os   #Used for the iconbitmap
 from classes import Histogram, Colorstamp
 from utils import *
 from sorts import *
@@ -11,22 +11,29 @@ from queue import Queue
 import threading
 import globals
 
+#Configuring height/width of the window
 WINDOW_COEFF = 0.7
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-array_size:int = 350
-Colors = True
-delay:int = 0
+#Mutating variables
+array_size:int = 350    #Used to control how big the array is
+Colors = True   #Used to know wether to display colors or not
+delay:int = 0   #Configues how much delay there is between moves
 
-window_resize_schedule_id = ""
+window_resize_schedule_id = ""  #Used to know wether a <Config> update is already scheduled
 
 
 """Configuring window"""
 root = tk.Tk()
 root.geometry(f"{int(WINDOW_COEFF*WINDOW_WIDTH)}x{int(WINDOW_COEFF*WINDOW_HEIGHT)}")
 root.title("Trie et fi")
-root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
+
+try:
+    root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
+except:
+    print("failed to load iconbitmap")
+    pass
 
 root.grid_columnconfigure(0, weight=5)
 root.grid_columnconfigure(1, weight=1)
