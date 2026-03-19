@@ -9,7 +9,8 @@ from .optimized_selection_sort import optimized_selectionsort
 from .merge_sort import merge_sort
 from .quick_sort import quick_sort
 from .reverse_list import reverselist
-
+from .stalin_sort import stalinsort
+from .bogo_sort import bogosort
 
 sorts_dict = {
     "Bubble sort" : bubblesort,
@@ -19,5 +20,8 @@ sorts_dict = {
     "Insertion sort" : insertionsort,
     "Merge sort" : merge_sort,
     "Quick sort" : quick_sort,
-    "Reverse list" : reverselist
+    "Reverse list" : reverselist,
+    "Stalin sort" : stalinsort,
+    "Bogo sort" : bogosort
     }
+

@@ -1,6 +1,7 @@
 import sys
 sys.dont_write_bytecode = True
 
+
 import tkinter as tk
 import os
 from classes import Histogram, Colorstamp
@@ -15,8 +16,9 @@ WINDOW_COEFF = 0.7
 WINDOW_HEIGHT = 1080
 WINDOW_WIDTH = 1920
 
-array_size:int = 350
+
 Colors = True
+array_size:int = 350
 delay:int = 0
 
 window_resize_schedule_id = ""

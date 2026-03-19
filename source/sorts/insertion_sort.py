@@ -1,6 +1,11 @@
 from classes import Histogram
 import globals
 
+""" insertion sort is sorting an array byinserting the value selected at its place
+    in the part that is already sorted.
+        average complexity O(n²) | best case  O(n) | worst case O(n²)"""
+
+
 def insertionsort(hist_list:list[Histogram]):
     n = len(hist_list)
     for i in range(1, n):
