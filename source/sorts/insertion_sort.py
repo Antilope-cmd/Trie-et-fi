@@ -1,6 +1,15 @@
 from classes import Histogram
 import globals
 
+"""
+Time complexity : O(n²) | Space complexity : O(1)
+
+Insertion sort considers the leftmost part of the array sorted,
+then it drags the next element left until it finds its place in the sorted
+part of the array.
+"""
+
+
 def insertionsort(hist_list:list[Histogram]):
     n = len(hist_list)
     for i in range(1, n):

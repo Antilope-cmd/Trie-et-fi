@@ -1,6 +1,14 @@
 from classes import Histogram
 import globals
 
+"""
+Time complexity : O(n²) | Space complexity : O(1)
+
+Cocktail shaker sort is a variant of bubble sort where after a pass we do a reverse pass.
+This way, the array gets sorted from both ends.
+"""
+
+
 def cocktailshaker_sort(hist_list:list[Histogram]):
     n = len(hist_list)
 

@@ -2,6 +2,16 @@ from classes import Histogram
 import globals
 from random import randint
 
+"""
+Time complexity : O(n*log(n)) | Space complexity : O(n)
+
+Quicksort picks a pivot and put all elements lower than the pivot on its left,
+and all the bigger ones on its right, before doing that recursively on the left and right.
+"""
+
+
+
+
 """Quicksort stays nice and simple because it already works on the main array"""
 
 def quick_sort(array):

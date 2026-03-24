@@ -1,6 +1,11 @@
 from classes import Histogram
 import globals
 
+"""
+This is simply a funciton to turn the list upside down.
+"""
+
+
 def reverselist(list_hist:list[Histogram]):
     n = len(list_hist)
 

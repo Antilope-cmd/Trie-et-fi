@@ -1,6 +1,14 @@
 from classes import Histogram
 import globals
 
+"""
+Time complexity : O(n²) | Space complexity : O(1)
+
+This optimized version of selectionsort selects both the maximum and minimum
+of the part that's not sorted, thus sorting faster.
+
+"""
+
 
 def optimized_selectionsort(hist_list:list[Histogram]):
     n = len(hist_list)

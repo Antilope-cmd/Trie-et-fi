@@ -1,6 +1,15 @@
 from classes import Histogram
 import globals
 
+"""
+Time complexity : O(n²) | Space complexity : O(1)
+
+Bubble sort works by swapping adjacent elements if they are unordered.
+This way, after one iteration of the inner loop, the biggest element has "bubbled" to the top.
+
+"""
+
+
 def bubblesort(hist_list:list[Histogram]):
     global moves_queue, stop_sorting_flag
 

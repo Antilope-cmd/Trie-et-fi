@@ -1,6 +1,14 @@
 from classes import Histogram
 import globals
 
+"""
+Time complexity : O(n*log(n)) | Space complexity : O(n)
+
+Mergesort divides the array into subarrays recursively before
+sorting them when going back up and merging them, thus the name.
+"""
+
+
 #Launch function, only used in recursive functions to signal to the GUI when to finish the sort;
 #as putting the finish inside the body of the funtion would call it everytime the function returns
 #This is the function we pass to the program

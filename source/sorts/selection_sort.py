@@ -1,6 +1,11 @@
 from classes import Histogram
 import globals
+"""
+Time complexity : O(n²) | Space complexity : O(1)
 
+Selection sort scans the array, finds the minimum, and puts it at the end of the sorted part of the array.
+It is the most intuitive one to understand as it is exaclty how a human would sort.
+"""
 def selectionsort(hist_list:list[Histogram]):
     n = len(hist_list)
 
