@@ -4,11 +4,12 @@ from time import time
 class Colorstamp():
     """Class used to store the current color and validity of a color from a Histogram"""
     def __init__(self, color:str, duration:float, canvas:tk.Canvas, canvas_id:int) -> None:
-        self.hist_id = canvas_id
+        self.hist_id = canvas_id #Storing the id ot change the color later
         self.color = color
+        #Timestamp + validity allows to check for expire time.
         self.timestamp = time()
         self.validity = duration
-        self.canvas:tk.Canvas = canvas
+        self.canvas:tk.Canvas = canvas #Storing th ecanvas to reset the color later
     
     def is_expired(self):
         if time() - self.timestamp > self.validity:
@@ -46,10 +47,12 @@ class Histogram():
 
         self.width = (canvas_width-20)/hist_amount
 
-        self.x1 = position*(self.width) + 10
+        self.x1 = position*(self.width) + 10 #Calculating rectangle boundaries
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
         self.y2 = canvas_height - self.height
+        
+        #Creating histogram
         self.canvas_id = self.canvas.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill=self.colour, outline='')
         return
     
@@ -61,19 +64,23 @@ class Histogram():
         canvas_height, canvas_width = self.get_dimensions()
         self.previous_value = self.value
         
-        
+        #Calculating relative position in percentages
         self.window_height_percentage = self.value/hist_amount
         self.height = int(self.window_height_percentage * canvas_height)
         self.width = (canvas_width-20)/hist_amount
 
+        #Recalculating coordinates
         self.x1 = position*(self.width) + 10
         self.y1 = canvas_height
         self.x2 = self.x1 + self.width
         self.y2 = canvas_height - self.height
+
+        #updating position
         self.canvas.coords(self.canvas_id, self.x1, self.y1, self.x2, self.y2)
         return
 
     def change_color(self, color:str, duration=0) -> Colorstamp:
+        """Changes the color of a histogram to the one specified"""
         self.colour = color
         self.canvas.itemconfig(self.canvas_id, fill=color)
         return Colorstamp(color=color, duration=duration, canvas=self.canvas, canvas_id=self.canvas_id)

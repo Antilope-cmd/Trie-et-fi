@@ -265,11 +265,11 @@ def animate(moves_list:Queue):
         delete_old_colors()
     
     #Scheduling next move
-    if not delay:
-        scheduled_animation_id = root.after_idle(lambda: animate(moves_list))
-    
-    else:
+    if delay:
         scheduled_animation_id = root.after(delay, lambda: animate(moves_list))
+        return
+
+    scheduled_animation_id = root.after_idle(lambda: animate(moves_list))
     
     return
 
