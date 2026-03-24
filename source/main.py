@@ -27,7 +27,7 @@ window_resize_schedule_id = ""  #Used to know wether a <Config> update is alread
 """Configuring window"""
 root = tk.Tk()
 root.geometry(f"{int(WINDOW_COEFF*WINDOW_WIDTH)}x{int(WINDOW_COEFF*WINDOW_HEIGHT)}")
-root.title("Trie et fi")
+root.title("Sortify")
 
 try:
     root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
