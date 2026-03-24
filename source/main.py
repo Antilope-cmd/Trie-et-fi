@@ -1,5 +1,5 @@
 import sys
-sys.dont_write_bytecode = True  #TODO: Remove this line before production
+sys.dont_write_bytecode = True  #NOTE: Remove this line before production
 
 import tkinter as tk
 import os   #Used for the iconbitmap
@@ -29,17 +29,18 @@ root = tk.Tk()
 root.geometry(f"{int(WINDOW_COEFF*WINDOW_WIDTH)}x{int(WINDOW_COEFF*WINDOW_HEIGHT)}")
 root.title("Sortify")
 
-try:
+try:    #Try to put logo on top left corner
     root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
 except:
     print("failed to load iconbitmap")
     pass
 
-root.grid_columnconfigure(0, weight=5)
-root.grid_columnconfigure(1, weight=1)
+#Only the canvas grows when window expanded.
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=0)
 root.grid_rowconfigure(0, weight=1)
 
-
+#Used to display the Histograms
 canvas = tk.Canvas(root, background="black")
 
 interface = tk.Frame(root, background="white", border=5)
@@ -58,10 +59,6 @@ canvas_dimensions = get_dimensions(canvas)
 #NOTE:Important variables
 main_list = [Histogram(i, canvas, width=20) for i in range(1, array_size+1)] #List that stores everything
 ml = main_list  #alias for main_list
-
-
-main_list_updates:list[int] = []    #List that stores pending GUI updates
-mlu = main_list_updates #alias for main_list_updates
 
 colored_dict:dict[str, list[Colorstamp]] = {    #Dictionary that stores the active colors on the GUI.
     "red" : [],
@@ -96,6 +93,7 @@ def resize_graph():
     root.after(1, lambda: update_canvas_display(ml, force_update=True))   #Recalculating
     
 def change_len_mainlist(new_len):
+    """Used to change the amount of histograms to sort"""
     global main_list, array_size
 
     if new_len == "":
@@ -133,15 +131,16 @@ def change_delay(new_delay):
     delay_label.config(text=f"Choose the delay between each move (current: {delay}ms)")
     return
 
-sorting = False
+
 expired_stamps:Queue[Colorstamp] = Queue()
 def update_colors():
+    """Filters the colortamps and puts them into expired_stamps queue for processing"""
     global colored_dict, amount_stamps_deleted
     global expired_stamps
 
-    while sorting:
+    while not globals.stop_sorting_flag.is_set():
 
-        for color in colored_dict.keys():
+        for color in colored_dict.keys():   #Filtering
 
             colorstamps = colored_dict[color]
 
@@ -156,10 +155,12 @@ def update_colors():
                     valid_stamps.append(stamp)
             
             colored_dict[color] = valid_stamps
-        sleep(0.016)
+
+        sleep(0.016)    #Only do it at 60fps to avoid hogging ressources
     return
 
 def delete_old_colors():
+    """Used by the main thread to reset all the colors in the expired_stamps queue"""
     global expired_stamps
     while not expired_stamps.empty():
         expired_stamps.get().reset_color()
@@ -169,26 +170,28 @@ def delete_old_colors():
 scheduled_animation_id:str
 def animate(moves_list:Queue):
     """Animation function for the GUI. Given a list of moves, this funtion will replicate them on the GUI."""
-    global ml, mlu, t1
-    global scheduled_animation_id
-    global sorting
+    global ml, scheduled_animation_id
     
+    #This condition means that the thread hasn't finished computing the moves yet
     if moves_list.empty():
-        scheduled_animation_id = root.after(1, lambda: animate(moves_list))
+        scheduled_animation_id = root.after(1, lambda: animate(moves_list)) #waiting
         print("waiting for moves to load")
         return
     
-    action = moves_list.get()
+    action = moves_list.get() #Getting the fist move in the queue(FIFO)
+
     #The greater the delay, the less skips happen to keep everything smooth
     #Max/min skips possible: 20/1
     max_skips = max( 1,
                 min(
         20,
-        int( 20 * (40/(delay+1) ) )
+        int( 5 * (40/(delay*3+1) ) )
         
         ))
     skips = 0
 
+    #I don't value compare action, they are boring
+    #So I skip them
     while Colors and action[0] == "compare" and skips < max_skips:
         _, i, j = action
         colorstamp1 = ml[i].change_color("red")
@@ -201,7 +204,8 @@ def animate(moves_list:Queue):
             break
 
         action = moves_list.get()
-        
+    
+    #Catching last compare action
     if action[0] == "compare" and Colors:
         _, i, j = action
         colorstamp1 = ml[i].change_color("red")
@@ -210,40 +214,41 @@ def animate(moves_list:Queue):
 
 
 
-    match action[0]:    #TODO: Comparisons outside the loop so we only animate the interesting things.
+    match action[0]:
         
         case "swap":
-            _, i, j = action
-            ml[i].value, ml[j].value = ml[j].value, ml[i].value
+            _, i, j = action #Retrieving indecies of swap
+            ml[i].value, ml[j].value = ml[j].value, ml[i].value #Swap
             
 
             update_canvas_display(main_list=ml, pending_updates_list=[i, j])
 
 
-            if Colors:
+            if Colors: #Coloring blue swaps
                 colorstamp1 = ml[i].change_color("blue")
                 colorstamp2 = ml[j].change_color("blue")
                 colored_dict["blue"].extend((colorstamp1, colorstamp2))
 
         
         case "set":
-            _, i, value = action
-            ml[i].value = value
+            _, i, value = action #Retriving index and value
+            ml[i].value = value #Setting value at index
 
             update_canvas_display(main_list=ml, pending_updates_list=[i])
 
-            if Colors:
+            if Colors: #Coloring set action green
                 colorstamp1 = ml[i].change_color("green")
                 colored_dict["green"].append(colorstamp1)
 
         case "finished":
 
             #Telling the threads to stop working.
-            sorting = False
             globals.stop_sorting_flag.clear()
 
+            #Erase remaining colors
             root.after(10, lambda: erase_colors(colored_dict=colored_dict, hist_list=main_list))
 
+            #Reconfigure buttons
             listbox.config(state="normal")
             sort_button.config(state="active")
             randomise_button.config(state="active")
@@ -251,6 +256,7 @@ def animate(moves_list:Queue):
             kill_sort_button.config(state="disabled")
             histogram_count_submit.config(state="active")
 
+            #Clearing moves_queue to avoid leaking into another sort
             globals.moves_queue = Queue()
 
             return
@@ -258,6 +264,7 @@ def animate(moves_list:Queue):
     if Colors:
         delete_old_colors()
     
+    #Scheduling next move
     if not delay:
         scheduled_animation_id = root.after_idle(lambda: animate(moves_list))
     
@@ -268,18 +275,18 @@ def animate(moves_list:Queue):
 
 
 def launch_sort(*args):
-    global sorting
+    """Function used to start a program. Will setup and call animate()"""
     
-    sorting = True
-    globals.stop_sorting_flag.clear()
+    globals.stop_sorting_flag.clear() #Clearing flag to sort again
 
     try:
         selection = listbox.curselection()
         selected_name = listbox.get(selection[0])
 
-    except IndexError:
+    except IndexError: #If no selection -> return
         return
 
+    # Retrieving the sorting algorithm
     func = sorts_dict[selected_name]
 
     listbox.config(state="disabled")
@@ -288,12 +295,15 @@ def launch_sort(*args):
     randomise_button.config(state="disabled")
     histogram_count_submit.config(state="disabled")
     
+    #Calling the sorting algorithm on a separate thread
     t1 = threading.Thread(target=func, args=args, daemon=True)
     t1.start()
 
+    #Starting to filter colors
     t2 = threading.Thread(target=update_colors, args=[], daemon=True)
     t2.start()
 
+    #Launching the animation
     root.after(1, lambda: animate(globals.moves_queue))
 
     return
@@ -302,14 +312,14 @@ def stop_animation():
     global scheduled_animation_id
 
     if scheduled_animation_id:
-        root.after_cancel(scheduled_animation_id)
+        root.after_cancel(scheduled_animation_id) #Cancels next frame
         
         pause_sort_button.config(text="Resume")
         kill_sort_button.config(state="active")
         
-        scheduled_animation_id = ""
+        scheduled_animation_id = "" #Resets scheduling
     else:
-        scheduled_animation_id = root.after(1, lambda: animate(globals.moves_queue))
+        scheduled_animation_id = root.after(1, lambda: animate(globals.moves_queue)) #Resume by scheduling next frame
 
         pause_sort_button.config(text="Pause")
         kill_sort_button.config(state="disabled")
@@ -320,17 +330,22 @@ def change_color_state():
     """Used to switch between black and white/colred (b&w makes performance improvements)"""
     global Colors, visual_colors
     Colors = not Colors
+
     if Colors:
         visual_colors.config(text='Colors: enabled')
     else:
         visual_colors.config(text='Colors: disabled')
+
     erase_colors(colored_dict, ml)
 
 def kill_sort():
-
+    """Used to stop sorting."""
+    #Signalings threads to stop
     globals.stop_sorting_flag.set()
 
+    #Resetting moves queue
     globals.moves_queue = Queue()
+    #Telling UI to stop animation
     globals.moves_queue.put(("finished",))
     stop_animation()
     return
@@ -433,6 +448,9 @@ delay_submit_button = tk.Button(
     width=10,
     font=("Arial", important_font_size),
 )
+
+
+"""Packing up the interface"""
 
 randomise_button.pack(fill="both", expand=True, padx=5, pady=1)
 sort_button.pack(fill="both", expand=True, padx=5, pady=1)
