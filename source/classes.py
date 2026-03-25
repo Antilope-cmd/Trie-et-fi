@@ -9,7 +9,7 @@ class Colorstamp():
         #Timestamp + validity allows to check for expire time.
         self.timestamp = time()
         self.validity = duration
-        self.canvas:tk.Canvas = canvas #Storing th ecanvas to reset the color later
+        self.canvas:tk.Canvas = canvas #Storing the canvas to reset the color later
     
     def is_expired(self):
         if time() - self.timestamp > self.validity:
