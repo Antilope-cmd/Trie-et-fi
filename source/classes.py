@@ -23,15 +23,15 @@ class Colorstamp():
 
 class Histogram():
     
-    def __init__(self, value:int, canvas:tk.Canvas, width:int) -> None:
-        self.value:int = value
+    def __init__(self, value:float, canvas:tk.Canvas, width:int) -> None:
+        self.value:float = value
         self.height:float = value
         self.width:float = width
         self.colour = "white"
         self.canvas:tk.Canvas = canvas  #Stroring the canvas reference to avoid asking for it later.
 
         self.previous_position:int
-        self.previous_value:int
+        self.previous_value:float
 
         #Setup rectangle id to allow modifications without redrawing.
         self.canvas_id:int

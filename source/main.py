@@ -8,6 +8,7 @@ from utils import *
 from sorts import *
 from time import sleep
 from queue import Queue
+from draw_window import draw_graph
 import threading
 import globals
 
@@ -350,6 +351,31 @@ def kill_sort():
     stop_animation()
     return
 
+def apply_graph():
+    global main_list, ml
+
+    root.winfo_toplevel().attributes("-disabled", True)
+
+    def draw_and_update():
+        global main_list, ml
+
+        histogram_input = draw_graph(array_size)
+
+        main_list.clear()
+        main_list.extend([Histogram(i*array_size, canvas, width=20) for i in histogram_input])
+        ml = main_list
+
+        canvas.delete("all")
+
+        for index, histogram in enumerate(main_list):
+            histogram.draw(position=index, hist_amount=len(main_list))
+
+        update_canvas_display(main_list, force_update=True)
+        root.winfo_toplevel().attributes("-disabled", False)
+
+    threading.Thread(target=draw_and_update, daemon=True).start()
+
+
 """HERE GO THE BUTTONS OF THE INTERFACE"""
 important_font_size = 18
 secondary_font_size = 14
@@ -393,6 +419,14 @@ visual_colors = tk.Button(
     interface,
     text="Colors: enabled",
     command=change_color_state,
+    width=15,
+    font=("Arial", secondary_font_size)
+    )
+
+draw_graph_button = tk.Button(
+    interface,
+    text="Draw my graph",
+    command=apply_graph,
     width=15,
     font=("Arial", secondary_font_size)
     )
@@ -457,6 +491,7 @@ sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 pause_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 kill_sort_button.pack(fill="both", expand=True, padx=5, pady=1)
 visual_colors.pack(fill="both", expand=True, padx=5, pady=1)
+draw_graph_button.pack(fill="both", expand=True, padx=5, pady=1)
 
 menu_separator.pack(fill="both", expand=False, padx=5)
 
