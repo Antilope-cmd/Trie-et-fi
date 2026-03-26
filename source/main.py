@@ -1,6 +1,3 @@
-import sys
-sys.dont_write_bytecode = True  #NOTE: Remove this line before production
-
 import tkinter as tk
 import os   #Used for the iconbitmap
 from classes import Histogram, Colorstamp

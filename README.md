@@ -2,8 +2,7 @@ Sorting algorithm vizualizer app.
 Made by Assad Norat, Jean Brochard, Corentin Vidal and Bachir Diallo.
 
 How to launch this project?
-    Go in the "releases" tab and download the .zip folder.
-    Unzip the folder.
+    Download or clone the project.
     Naviguate into the source directory and lauch main.py.
 
 
