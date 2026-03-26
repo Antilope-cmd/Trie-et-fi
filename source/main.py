@@ -97,7 +97,9 @@ def change_len_mainlist(new_len):
     """Used to change the amount of histograms to sort"""
     global main_list, array_size, histogram_amount_entry
     
-    histogram_amount_entry.delete(0, 'end')#FIXME
+    histogram_amount_entry.config(validate="none")
+    histogram_amount_entry.delete(0, 'end')
+    histogram_amount_entry.config(validate="key")
 
     if new_len == "":
         return
@@ -126,7 +128,9 @@ def change_len_mainlist(new_len):
 def change_delay(new_delay):
     global delay
 
-    delay_entry.delete(0, tk.END)#FIXME
+    delay_entry.configure(validate="none")
+    delay_entry.delete(0, tk.END)
+    delay_entry.configure(validate="key")
 
     if new_delay == "":
         return
