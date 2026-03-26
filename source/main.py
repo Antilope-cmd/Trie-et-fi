@@ -28,7 +28,7 @@ window_resize_schedule_id = ""  #Used to know wether a <Config> update is alread
 """Configuring window"""
 root = tk.Tk()
 root.geometry(f"{int(WINDOW_COEFF*WINDOW_WIDTH)}x{int(WINDOW_COEFF*WINDOW_HEIGHT)}")
-root.title("Sortify")
+root.title("Trie et Fi")
 
 try:    #Try to put logo on top left corner
     root.iconbitmap(os.path.join(os.path.dirname(__file__), "icon.ico"))
