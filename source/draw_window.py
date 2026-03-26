@@ -3,6 +3,8 @@ def draw_graph(values_to_make: int):
     results_list: list = [None]  # mutable container to escape closure scope
 
     root = tk.Tk()
+    root.title("Draw a graph")
+
     root.columnconfigure(0, weight=3)
     root.rowconfigure(0, weight=1)
     root.rowconfigure(1, weight=1)
@@ -80,7 +82,14 @@ def draw_graph(values_to_make: int):
         results_list[0] = get_values()
         root.after(10, lambda: root.destroy())
 
-    submit_button = tk.Button(master=root, command=end_graph, text="Submit")
+    submit_button = tk.Button(
+        master=root,
+        command=end_graph,
+        text="Submit",
+        width=35,
+        height=2,
+        font= ("Arial", 20)
+        )
     canvas.bind("<B1-Motion>", on_click)
     canvas.bind("<Button-1>", on_click)
     canvas.grid(row=0, column=0)
@@ -89,3 +98,6 @@ def draw_graph(values_to_make: int):
     root.mainloop()
 
     return results_list[0] if results_list[0] is not None else [i / values_to_make for i in range(1, values_to_make + 1)]
+
+if __name__ == "__main__":
+    draw_graph(100)
