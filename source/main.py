@@ -95,7 +95,9 @@ def resize_graph():
     
 def change_len_mainlist(new_len):
     """Used to change the amount of histograms to sort"""
-    global main_list, array_size
+    global main_list, array_size, histogram_amount_entry
+    
+    histogram_amount_entry.delete(0, 'end')#FIXME
 
     if new_len == "":
         return
@@ -123,6 +125,8 @@ def change_len_mainlist(new_len):
 
 def change_delay(new_delay):
     global delay
+
+    delay_entry.delete(0, tk.END)#FIXME
 
     if new_delay == "":
         return
